@@ -83,10 +83,10 @@ public:
 };
 
 
-void set_unit_positions(std::vector<Unit_Values> units_pointer, int map_size)
+void set_unit_positions(std::vector<Unit_Values> *units_pointer, int map_size)
 {
 	int x_val = 0, y_val = 0;
-	for (Unit_Values unit : units_pointer)
+	for (Unit_Values unit : *units_pointer)
 	{
 		
 		(&unit)->set_unit_location(x_val, y_val, 0);
@@ -127,7 +127,7 @@ int main()
 
 	std::vector<Unit_Values> *units_pointer = &our_units;
 
-	set_unit_positions(*units_pointer, our_map.map_size);
+	set_unit_positions(&our_units, our_map.map_size);
 	
 	for (Unit_Values unit : *units_pointer)
 	{
