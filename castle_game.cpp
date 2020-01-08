@@ -83,15 +83,15 @@ public:
 };
 
 
-void set_unit_positions(std::vector<Unit_Values> units, int map_size)
+void set_unit_positions(std::vector<Unit_Values> *units, int map_size)
 {
 	int x_val = 0, y_val = 0;
-	for (Unit_Values unit : units)
+	for (Unit_Values unit : *units)
 	{
 		
 		unit.set_unit_location(x_val, y_val, 0);
 
-		std::cout << unit.getX() << " " << unit.getY() << " " << unit.getZ() << std::endl;
+		std::cout << unit.getX() << " " << unit.getY() << " " << unit.getZ() << "END ";
 		
 		if ((x_val > map_size) && (x_val % map_size == 0 || 1))
 		{
@@ -125,12 +125,15 @@ int main()
 
 	std::vector<Unit_Values> our_units = redeem_points(1600);
 
-	set_unit_positions(our_units, our_map.map_size);
+	std::vector<Unit_Values> *units_pointer;
+	units_pointer = &our_units;
+
+	set_unit_positions(units_pointer, our_map.map_size);
 	
-	for (Unit_Values unit : our_units)
+	for (Unit_Values unit : *units_pointer)
 	{
-		std::cout << unit.health << "\n";
-		std::cout << unit.getX() << " " << unit.getY() << " " << unit.getZ() << std::endl;
+		std::cout << unit.health << "HEALTH ";
+		//std::cout << unit.getX() << " " << unit.getY() << " " << unit.getZ() << "END ";
 		//std::cout << "(" << unit.getX() << ", " << unit.getY() << ", " << unit.getZ() << ")" << std::endl;
 	}
 	
