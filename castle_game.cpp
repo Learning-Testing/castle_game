@@ -40,6 +40,15 @@ public:
 	}
 };
 
+
+class Player
+{
+public:
+	std::string name;
+	std::vector<Unit_Values> army;
+};
+
+
 class Soldier : public Unit_Values
 {
 public:
@@ -76,39 +85,90 @@ class warmap
 public:
 	int map_size = 200;
 	
-	void map_movement(Unit_Values)
+	void map_movement(Player player_one, Player player_two)
 	{
-		;
+		for (auto &unit_one : player_one.army)
+		{
+			for (auto &unit_two : player_two.army)
+			{
+				unit_one.
+			}
+		}
 	}
 };
 
 
-void set_unit_positions(std::vector<Unit_Values> &units_pointer, int map_size)
+void set_player_one(std::vector<Unit_Values> &units_pointer, int map_size, std::string player_name)
 {
 	int x_val = 0, y_val = 0;
-	for (int i=0; i < units_pointer.size(); i++)
+	for (auto &unit : units_pointer)
 	{
-		
-		units_pointer[i].set_unit_location(x_val, y_val, 0);
+		unit.set_unit_location(x_val, y_val, 0);
 
-		//std::cout << units_pointer[i].getX() << " " << units_pointer[i].getY() << " " << units_pointer[i].getZ() << "END ";
-		
 		if ((x_val > map_size) && (x_val % map_size == 0 || 1))
 		{
-			//std::cout << "\ny change from " << y_val << " to ";
 			x_val = 0;
 			++y_val;
-			//std::cout << y_val << "\n";
 		}
-		//std::cout << "x value:" << x_val << ", ";
 		x_val++;
+	}
+}
+
+void set_player_two(std::vector<Unit_Values> &units_pointer, int map_size, std::string player_name)
+{
+	int x_val = 0, y_val = map_size;
+
+	for (auto &unit : units_pointer)
+	{
+		unit.set_unit_location(x_val, y_val, 0);
+
+		if ((x_val > map_size) && (x_val % map_size == 0 || 1))
+		{
+			x_val = 0;
+			--y_val;
+		}
+		x_val++;
+	}
+}
+
+void set_unit_positions(std::vector<Unit_Values> &units_pointer, int map_size, std::string player_name)
+{
+	for (auto &unit : units_pointer)
+	{
+		
+		if (player_name == "player_one")
+		{
+			int x_val = 0, y_val = 0;
+
+			unit.set_unit_location(x_val, y_val, 0);
+
+			if ((x_val > map_size) && (x_val % map_size == 0 || 1))
+			{
+				x_val = 0;
+				++y_val;
+			}
+			x_val++;
+		}
+
+		else if (player_name == "player_two")
+		{
+			int x_val = 0, y_val = map_size;
+
+			unit.set_unit_location(x_val, y_val, 0);
+
+			if ((x_val > map_size) && (x_val % map_size == 0 || 1))
+			{
+				x_val = 0;
+				--y_val;
+			}
+			x_val++;
+		}
 	}
 }
 
 std::vector<Unit_Values> redeem_points(int num)
 {
 	std::vector<Unit_Values> unit_vector;
-	Soldier curr_unit;
 	 for (int i = 0; i < num; ++i)
 	{
 		Soldier curr_unit;
@@ -123,18 +183,38 @@ int main()
 {
 	warmap our_map;
 
-	std::vector<Unit_Values> our_units = redeem_points(1600);
+	Player player_one;
+	Player player_two;
 
-	std::vector<Unit_Values> *units_pointer = &our_units;
 
-	set_unit_positions(*units_pointer, our_map.map_size);
+	std::vector<Unit_Values> our_units = redeem_points(400);
+	player_one.army = redeem_points(400);
+	std::vector<Unit_Values> *player_one_army_pointer = &player_one.army;
+	player_two.army = redeem_points(400);
+	std::vector<Unit_Values> *player_two_army_pointer = &player_two.army;
+	player_one.name = "player_one";
+	player_two.name = "player_two";
+
+	set_player_one(*player_one_army_pointer, our_map.map_size, player_one.name);
+	set_player_two(*player_two_army_pointer, our_map.map_size, player_two.name);
+
 	
-	for (Unit_Values unit : *units_pointer)
+	for (auto &unit : *player_one_army_pointer)
 	{
-		//std::cout << unit.health << "HEALTH ";
-		std::cout << unit.getX() << " " << unit.getY() << " " << unit.getZ() << "END ";
-		//std::cout << "(" << unit.getX() << ", " << unit.getY() << ", " << unit.getZ() << ")" << std::endl;
+		//std::cout << unit.getX() << " " << unit.getY() << " " << unit.getZ() << "END ";
+		std::cout << "(" << unit.getX() << ", " << unit.getY() << ", " << unit.getZ() << ")" << std::endl;
+	}
+	int inp;
+	
+	std::cout << "enter a number:" << std::endl;
+	std::cin >> inp; 
+	
+	for (auto &unit : *player_two_army_pointer)
+	{
+		std::cout << "(" << unit.getX() << ", " << unit.getY() << ", " << unit.getZ() << ")" << std::endl;
 	}
 	
+	//our_map.map_movement(player_one, player_two);
+
 	return 0;
 }
